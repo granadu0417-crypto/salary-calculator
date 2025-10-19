@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://salary-calculator.pages.dev/sitemap.xml
+
+# 크롤링 속도 조절
+Crawl-delay: 1
