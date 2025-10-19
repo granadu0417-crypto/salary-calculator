@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연봉 실수령액 계산기 - 세후 연봉 자동 계산</title>
+    <meta name="description" content="연봉에서 4대보험, 소득세 공제 후 실제 받는 연봉 계산. 월 평균 실수령액, 세금 상세 내역.">
+    <meta name="keywords" content="연봉 계산기, 세후 연봉, 실수령 연봉, 연봉 환산, 월급 환산">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 3px solid #667eea;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover, nav a.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .calculator {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 3px solid #667eea;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item.highlight {
+            border-bottom: none;
+            background: #f0f7ff;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: #667eea;
+        }
+
+        .result-label {
+            color: #666;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+            margin-top: 30px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .warning-box h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 월급 계산기</h1>
+            <p class="subtitle">2025년 최신 세율로 정확하게 계산하세요</p>
+        </header>
+
+        <nav>
+            <a href="index.html">월급 실수령액</a>
+            <a href="annual-salary.html" class="active">연봉 계산기</a>
+            <a href="bonus-calculator.html">상여금 계산</a>
+            <a href="insurance-guide.html">4대보험 가이드</a>
+            <a href="salary-guide.html">급여 가이드</a>
+        </nav>
+
+        <div class="content">
+            <h2>연봉 실수령액 계산기</h2>
+            <p style="color: #666; margin: 20px 0;">세전 연봉에서 연간 공제액을 계산하여 실제 받는 연봉을 확인합니다.</p>
+
+            <div class="calculator">
+                <div class="form-group">
+                    <label>세전 연봉 (원)</label>
+                    <input type="number" id="annualSalary" placeholder="예: 36000000">
+                    <small style="color: #666; display: block; margin-top: 8px;">
+                        * 기본급 + 각종 수당 × 12개월
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>연간 비과세 금액 (원)</label>
+                    <input type="number" id="annualTaxFree" placeholder="예: 2400000" value="0">
+                    <small style="color: #666; display: block; margin-top: 8px;">
+                        * 식대(월 20만원 × 12 = 240만원) 등
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>부양가족 수 (본인 포함)</label>
+                    <select id="dependents">
+                        <option value="1">1명 (본인만)</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                        <option value="5">5명</option>
+                        <option value="6">6명 이상</option>
+                    </select>
+                </div>
+
+                <button onclick="calculate()">연봉 실수령액 계산하기</button>
+            </div>
+
+            <div class="result" id="result">
+                <h3 style="margin-bottom: 20px; color: #667eea;">계산 결과</h3>
+                
+                <div class="result-item highlight">
+                    <span class="result-label">세전 연봉</span>
+                    <span class="result-value" id="resultGross">-</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">연간 비과세 금액</span>
+                    <span class="result-value" id="resultTaxFree">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">연간 4대보험</span>
+                    <span class="result-value" id="resultInsurance">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">연간 소득세</span>
+                    <span class="result-value" id="resultIncomeTax">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">연간 지방소득세</span>
+                    <span class="result-value" id="resultLocalTax">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">연간 총 공제액</span>
+                    <span class="result-value" id="resultTotalDeduction">-</span>
+                </div>
+
+                <div class="result-item highlight">
+                    <span class="result-label">연간 실수령액</span>
+                    <span class="result-value" id="resultNet">-</span>
+                </div>
+
+                <div class="result-item" style="background: #f8f9fa; margin-top: 15px;">
+                    <span class="result-label">월 평균 실수령액</span>
+                    <span class="result-value" id="resultMonthly">-</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>연봉 vs 월급 차이</h3>
+                <p><strong>세전 연봉:</strong> 1년간 받을 총 급여 (기본급 + 수당 + 상여금)</p>
+                <p><strong>세전 월급:</strong> 연봉 ÷ 12개월 (일반적으로 상여금 별도)</p>
+                <p><strong>실수령 연봉:</strong> 세전 연봉 - (4대보험 + 소득세 + 지방소득세)</p>
+                <p><strong>월 실수령액:</strong> 실수령 연봉 ÷ 12개월</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h3>연봉별 예상 실수령액 (1인 가구 기준)</h3>
+                <p><strong>3,000만원:</strong> 약 2,640만원 (월 220만원)</p>
+                <p><strong>4,000만원:</strong> 약 3,430만원 (월 286만원)</p>
+                <p><strong>5,000만원:</strong> 약 4,170만원 (월 348만원)</p>
+                <p><strong>6,000만원:</strong> 약 4,870만원 (월 406만원)</p>
+                <p><strong>8,000만원:</strong> 약 6,230만원 (월 519만원)</p>
+                <p><strong>1억원:</strong> 약 7,500만원 (월 625만원)</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 유의사항</h4>
+                <p>• 간이세액표 기준 근사값으로 실제와 다를 수 있습니다</p>
+                <p>• 연말정산 시 소득공제, 세액공제에 따라 환급/추징됩니다</p>
+                <p>• 상여금이 별도 지급되는 경우 실수령액이 달라집니다</p>
+                <p>• 정확한 금액은 회사 인사팀에 문의하세요</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ko-KR').format(num);
+        }
+
+        function getAnnualIncomeTax(annualTaxable, dependents) {
+            // 기본공제: 본인 150만원 + 부양가족 1인당 150만원
+            const basicDeduction = dependents * 1500000;
+            const taxableIncome = Math.max(0, annualTaxable - basicDeduction);
+
+            let tax = 0;
+
+            // 누진세율 적용 (2025년 기준)
+            if (taxableIncome <= 14000000) {
+                tax = taxableIncome * 0.06;
+            } else if (taxableIncome <= 50000000) {
+                tax = 840000 + (taxableIncome - 14000000) * 0.15;
+            } else if (taxableIncome <= 88000000) {
+                tax = 6240000 + (taxableIncome - 50000000) * 0.24;
+            } else if (taxableIncome <= 150000000) {
+                tax = 15360000 + (taxableIncome - 88000000) * 0.35;
+            } else if (taxableIncome <= 300000000) {
+                tax = 37060000 + (taxableIncome - 150000000) * 0.38;
+            } else if (taxableIncome <= 500000000) {
+                tax = 94060000 + (taxableIncome - 300000000) * 0.40;
+            } else {
+                tax = 174060000 + (taxableIncome - 500000000) * 0.42;
+            }
+
+            return Math.floor(tax);
+        }
+
+        function calculate() {
+            const annualSalary = parseInt(document.getElementById('annualSalary').value) || 0;
+            const annualTaxFree = parseInt(document.getElementById('annualTaxFree').value) || 0;
+            const dependents = parseInt(document.getElementById('dependents').value);
+
+            if (!annualSalary || annualSalary <= 0) {
+                alert('세전 연봉을 올바르게 입력해주세요.');
+                return;
+            }
+
+            // 과세 대상 연봉
+            const taxableAnnual = annualSalary - annualTaxFree;
+            const monthlyTaxable = Math.floor(taxableAnnual / 12);
+
+            // 연간 4대보험 계산
+            const annualPension = Math.floor(taxableAnnual * 0.045);
+            const annualHealth = Math.floor(taxableAnnual * 0.03545);
+            const annualCare = Math.floor(annualHealth * 0.1295);
+            const annualEmployment = Math.floor(taxableAnnual * 0.009);
+            const annualInsurance = annualPension + annualHealth + annualCare + annualEmployment;
+
+            // 연간 소득세 계산
+            const annualIncomeTax = getAnnualIncomeTax(taxableAnnual, dependents);
+            const annualLocalTax = Math.floor(annualIncomeTax * 0.1);
+
+            // 연간 총 공제액
+            const totalDeduction = annualInsurance + annualIncomeTax + annualLocalTax;
+
+            // 연간 실수령액
+            const netAnnual = annualSalary - totalDeduction;
+
+            // 월 평균 실수령액
+            const monthlyNet = Math.floor(netAnnual / 12);
+
+            // 결과 표시
+            document.getElementById('resultGross').textContent = formatNumber(annualSalary) + '원';
+            document.getElementById('resultTaxFree').textContent = formatNumber(annualTaxFree) + '원';
+            document.getElementById('resultInsurance').textContent = formatNumber(annualInsurance) + '원';
+            document.getElementById('resultIncomeTax').textContent = formatNumber(annualIncomeTax) + '원';
+            document.getElementById('resultLocalTax').textContent = formatNumber(annualLocalTax) + '원';
+            document.getElementById('resultTotalDeduction').textContent = formatNumber(totalDeduction) + '원';
+            document.getElementById('resultNet').textContent = formatNumber(netAnnual) + '원';
+            document.getElementById('resultMonthly').textContent = formatNumber(monthlyNet) + '원';
+
+            document.getElementById('result').classList.add('show');
+        }
+    </script>
+</body>
+</html>

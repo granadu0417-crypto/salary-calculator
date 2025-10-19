@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4대보험 완벽 가이드 - 국민연금, 건강보험, 고용보험, 산재보험</title>
+    <meta name="description" content="4대보험 요율, 혜택, 신청방법 완벽 정리. 국민연금, 건강보험, 고용보험, 산재보험 모든 것.">
+    <meta name="keywords" content="4대보험, 국민연금, 건강보험, 고용보험, 산재보험, 사회보험">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 3px solid #667eea;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover, nav a.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .insurance-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .insurance-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .insurance-section h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .insurance-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .insurance-section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .insurance-section li {
+            color: #555;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .rate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .rate-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .rate-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rate-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                text-align: center;
+            }
+
+            .rate-table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 월급 계산기</h1>
+            <p class="subtitle">2025년 최신 세율로 정확하게 계산하세요</p>
+        </header>
+
+        <nav>
+            <a href="index.html">월급 실수령액</a>
+            <a href="annual-salary.html">연봉 계산기</a>
+            <a href="bonus-calculator.html">상여금 계산</a>
+            <a href="insurance-guide.html" class="active">4대보험 가이드</a>
+            <a href="salary-guide.html">급여 가이드</a>
+        </nav>
+
+        <div class="content">
+            <h2>4대보험 완벽 가이드</h2>
+            <p style="color: #666; margin: 20px 0;">국민연금, 건강보험, 고용보험, 산재보험의 모든 것을 알려드립니다.</p>
+
+            <table class="rate-table">
+                <thead>
+                    <tr>
+                        <th>보험 종류</th>
+                        <th>본인 부담</th>
+                        <th>사업주 부담</th>
+                        <th>합계</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>국민연금</strong></td>
+                        <td>4.5%</td>
+                        <td>4.5%</td>
+                        <td>9.0%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>건강보험</strong></td>
+                        <td>3.545%</td>
+                        <td>3.545%</td>
+                        <td>7.09%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>장기요양보험</strong></td>
+                        <td>건강보험의 12.95%</td>
+                        <td>건강보험의 12.95%</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>고용보험</strong></td>
+                        <td>0.9%</td>
+                        <td>0.9~1.5%</td>
+                        <td>1.8~2.4%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>산재보험</strong></td>
+                        <td>0%</td>
+                        <td>업종별 상이</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insurance-section">
+                <h3>1️⃣ 국민연금</h3>
+                
+                <h4>📊 기본 정보</h4>
+                <ul>
+                    <li><strong>요율:</strong> 9% (본인 4.5%, 사업주 4.5%)</li>
+                    <li><strong>가입 대상:</strong> 만 18세~60세 미만 모든 근로자</li>
+                    <li><strong>납부 상한액:</strong> 월 590만원 (2025년 기준)</li>
+                </ul>
+
+                <h4>💰 받을 수 있는 급여</h4>
+                <ul>
+                    <li><strong>노령연금:</strong> 10년 이상 가입 시 평생 수령</li>
+                    <li><strong>장애연금:</strong> 가입 중 질병/부상으로 장애 발생 시</li>
+                    <li><strong>유족연금:</strong> 가입자 사망 시 유족에게 지급</li>
+                    <li><strong>반환일시금:</strong> 10년 미만 가입 후 60세 도달 시</li>
+                </ul>
+
+                <h4>📞 문의</h4>
+                <p>국민연금공단: 1355 / www.nps.or.kr</p>
+            </div>
+
+            <div class="insurance-section">
+                <h3>2️⃣ 건강보험</h3>
+                
+                <h4>📊 기본 정보</h4>
+                <ul>
+                    <li><strong>요율:</strong> 7.09% (본인 3.545%, 사업주 3.545%)</li>
+                    <li><strong>가입 대상:</strong> 모든 근로자 (1개월 이상 근무)</li>
+                    <li><strong>장기요양보험:</strong> 건강보험료의 12.95% 추가</li>
+                </ul>
+
+                <h4>💊 받을 수 있는 혜택</h4>
+                <ul>
+                    <li><strong>진료비 지원:</strong> 병원 진료 시 본인부담금 30~60%</li>
+                    <li><strong>건강검진:</strong> 2년마다 무료 건강검진</li>
+                    <li><strong>임신·출산 지원:</strong> 산전검사, 출산비용 지원</li>
+                    <li><strong>본인부담상한제:</strong> 연간 의료비 상한액 초과 시 환급</li>
+                </ul>
+
+                <h4>📞 문의</h4>
+                <p>국민건강보험공단: 1577-1000 / www.nhis.or.kr</p>
+            </div>
+
+            <div class="insurance-section">
+                <h3>3️⃣ 고용보험</h3>
+                
+                <h4>📊 기본 정보</h4>
+                <ul>
+                    <li><strong>요율:</strong> 1.8~2.4% (본인 0.9%, 사업주 0.9~1.5%)</li>
+                    <li><strong>가입 대상:</strong> 1개월 이상 근로자 (주 15시간 이상)</li>
+                </ul>
+
+                <h4>💼 받을 수 있는 급여</h4>
+                <ul>
+                    <li><strong>실업급여:</strong> 비자발적 퇴사 시 최대 270일</li>
+                    <li><strong>육아휴직급여:</strong> 육아휴직 시 월 150~250만원</li>
+                    <li><strong>출산전후휴가급여:</strong> 출산휴가 시 90일분 지급</li>
+                    <li><strong>직업훈련지원금:</strong> 재취업 교육 시 지원</li>
+                </ul>
+
+                <h4>📞 문의</h4>
+                <p>고용노동부: 1350 / www.ei.go.kr</p>
+            </div>
+
+            <div class="insurance-section">
+                <h3>4️⃣ 산재보험</h3>
+                
+                <h4>📊 기본 정보</h4>
+                <ul>
+                    <li><strong>요율:</strong> 업종별 상이 (0.7~34%)</li>
+                    <li><strong>가입 대상:</strong> 모든 사업장 (1명 이상 근로자)</li>
+                    <li><strong>부담:</strong> 사업주 100% 부담 (근로자 부담 없음)</li>
+                </ul>
+
+                <h4>🏥 받을 수 있는 급여</h4>
+                <ul>
+                    <li><strong>요양급여:</strong> 업무상 질병·부상 치료비 전액</li>
+                    <li><strong>휴업급여:</strong> 치료로 인한 휴업 시 평균임금의 70%</li>
+                    <li><strong>장해급여:</strong> 장해 발생 시 평균임금 × 장해등급</li>
+                    <li><strong>유족급여:</strong> 업무상 사망 시 유족에게 지급</li>
+                </ul>
+
+                <h4>📞 문의</h4>
+                <p>근로복지공단: 1588-0075 / www.kcomwel.or.kr</p>
+            </div>
+
+            <div class="info-box">
+                <h4>✅ 4대보험 가입 확인 방법</h4>
+                <p><strong>1. 정부24 (www.gov.kr)</strong></p>
+                <p>→ 민원서비스 → 4대사회보험 가입내역 확인</p>
+                <p style="margin-top: 15px;"><strong>2. 각 기관 홈페이지</strong></p>
+                <p>→ 국민연금: www.nps.or.kr<br>
+                   → 건강보험: www.nhis.or.kr<br>
+                   → 고용보험: www.ei.go.kr<br>
+                   → 산재보험: www.kcomwel.or.kr</p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 주의사항</h4>
+                <p>• 회사가 4대보험 미가입 시 근로복지공단에 신고 가능</p>
+                <p>• 보험료는 회사와 근로자가 공동 부담 (산재 제외)</p>
+                <p>• 퇴사 후 실업급여, 국민연금 등 혜택 확인 필수</p>
+                <p>• 자세한 내용은 각 기관에 문의하세요</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상여금 계산기 - 성과급 세금 자동 계산</title>
+    <meta name="description" content="상여금, 성과급, 보너스 지급 시 공제되는 세금 계산. 4대보험, 소득세 자동 계산.">
+    <meta name="keywords" content="상여금 계산기, 성과급 계산, 보너스 세금, 상여금 실수령액">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 3px solid #667eea;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover, nav a.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .calculator {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 3px solid #667eea;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item.highlight {
+            border-bottom: none;
+            background: #f0f7ff;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: #667eea;
+        }
+
+        .result-label {
+            color: #666;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+            margin-top: 30px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .warning-box h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 월급 계산기</h1>
+            <p class="subtitle">2025년 최신 세율로 정확하게 계산하세요</p>
+        </header>
+
+        <nav>
+            <a href="index.html">월급 실수령액</a>
+            <a href="annual-salary.html">연봉 계산기</a>
+            <a href="bonus-calculator.html" class="active">상여금 계산</a>
+            <a href="insurance-guide.html">4대보험 가이드</a>
+            <a href="salary-guide.html">급여 가이드</a>
+        </nav>
+
+        <div class="content">
+            <h2>상여금/성과급 계산기</h2>
+            <p style="color: #666; margin: 20px 0;">상여금, 성과급, 보너스 지급 시 공제되는 세금을 계산합니다.</p>
+
+            <div class="calculator">
+                <div class="form-group">
+                    <label>상여금 지급액 (세전)</label>
+                    <input type="number" id="bonusAmount" placeholder="예: 5000000">
+                </div>
+
+                <div class="form-group">
+                    <label>월 평균 급여 (세전)</label>
+                    <input type="number" id="monthlySalary" placeholder="예: 3000000">
+                    <small style="color: #666; display: block; margin-top: 8px;">
+                        * 상여금 제외한 월 평균 급여 (소득세율 계산에 필요)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>부양가족 수 (본인 포함)</label>
+                    <select id="dependents">
+                        <option value="1">1명 (본인만)</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                        <option value="5">5명</option>
+                        <option value="6">6명 이상</option>
+                    </select>
+                </div>
+
+                <button onclick="calculate()">상여금 실수령액 계산하기</button>
+            </div>
+
+            <div class="result" id="result">
+                <h3 style="margin-bottom: 20px; color: #667eea;">계산 결과</h3>
+                
+                <div class="result-item">
+                    <span class="result-label">지급 상여금 (세전)</span>
+                    <span class="result-value" id="resultBonus">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">국민연금 (4.5%)</span>
+                    <span class="result-value" id="resultPension">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">건강보험 (3.545%)</span>
+                    <span class="result-value" id="resultHealth">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">장기요양보험 (12.95%)</span>
+                    <span class="result-value" id="resultCare">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">고용보험 (0.9%)</span>
+                    <span class="result-value" id="resultEmployment">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">소득세</span>
+                    <span class="result-value" id="resultIncomeTax">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">지방소득세 (10%)</span>
+                    <span class="result-value" id="resultLocalTax">-</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">총 공제액</span>
+                    <span class="result-value" id="resultTotalDeduction">-</span>
+                </div>
+
+                <div class="result-item highlight">
+                    <span class="result-label">상여금 실수령액</span>
+                    <span class="result-value" id="resultNet">-</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>상여금 과세 방식</h3>
+                <ul>
+                    <li><strong>4대보험:</strong> 상여금에도 동일하게 적용 (월급과 동일 요율)</li>
+                    <li><strong>소득세:</strong> (월급 + 상여금) 합산 후 누진세율 적용</li>
+                    <li><strong>연말정산:</strong> 연간 총급여에 상여금 포함하여 정산</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h3>상여금 지급 시기별 차이</h3>
+                <ul>
+                    <li><strong>정기 상여금:</strong> 연 2~4회 정기 지급 (명절, 휴가비 등)</li>
+                    <li><strong>성과급:</strong> 개인/팀 성과에 따라 지급</li>
+                    <li><strong>인센티브:</strong> 매출, 영업 목표 달성 시 지급</li>
+                    <li><strong>일시금:</strong> 퇴직금, 특별 보너스 등</li>
+                </ul>
+                <p style="margin-top: 15px; color: #555;">
+                    * 모든 상여금은 근로소득으로 과세되며, 4대보험 및 소득세가 동일하게 적용됩니다.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 유의사항</h4>
+                <p>• 상여금은 월급과 합산하여 누진세율이 적용됩니다</p>
+                <p>• 고액 상여금 수령 시 세율이 높아질 수 있습니다</p>
+                <p>• 연말정산 시 환급/추징이 발생할 수 있습니다</p>
+                <p>• 정확한 금액은 회사 인사팀에 문의하세요</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ko-KR').format(num);
+        }
+
+        function getBonusTax(monthlyIncome, bonusAmount, dependents) {
+            // 월급 + 상여금 합산 소득으로 세율 계산
+            const totalIncome = monthlyIncome + bonusAmount;
+            const annualIncome = totalIncome * 12;
+
+            // 기본공제
+            const basicDeduction = dependents * 1500000;
+            const annualTaxable = Math.max(0, annualIncome - basicDeduction);
+
+            let annualTax = 0;
+
+            if (annualTaxable <= 14000000) {
+                annualTax = annualTaxable * 0.06;
+            } else if (annualTaxable <= 50000000) {
+                annualTax = 840000 + (annualTaxable - 14000000) * 0.15;
+            } else if (annualTaxable <= 88000000) {
+                annualTax = 6240000 + (annualTaxable - 50000000) * 0.24;
+            } else if (annualTaxable <= 150000000) {
+                annualTax = 15360000 + (annualTaxable - 88000000) * 0.35;
+            } else {
+                annualTax = 37060000 + (annualTaxable - 150000000) * 0.38;
+            }
+
+            // 상여금 비율만큼 세금 배분
+            const bonusRatio = bonusAmount / totalIncome;
+            const bonusTax = Math.floor((annualTax / 12) * bonusRatio);
+
+            return bonusTax;
+        }
+
+        function calculate() {
+            const bonusAmount = parseInt(document.getElementById('bonusAmount').value) || 0;
+            const monthlySalary = parseInt(document.getElementById('monthlySalary').value) || 0;
+            const dependents = parseInt(document.getElementById('dependents').value);
+
+            if (!bonusAmount || bonusAmount <= 0) {
+                alert('상여금 지급액을 올바르게 입력해주세요.');
+                return;
+            }
+
+            if (!monthlySalary || monthlySalary <= 0) {
+                alert('월 평균 급여를 올바르게 입력해주세요.');
+                return;
+            }
+
+            // 4대보험 계산
+            const pension = Math.floor(bonusAmount * 0.045);
+            const health = Math.floor(bonusAmount * 0.03545);
+            const care = Math.floor(health * 0.1295);
+            const employment = Math.floor(bonusAmount * 0.009);
+
+            // 소득세 계산
+            const incomeTax = getBonusTax(monthlySalary, bonusAmount, dependents);
+            const localTax = Math.floor(incomeTax * 0.1);
+
+            // 총 공제액
+            const totalDeduction = pension + health + care + employment + incomeTax + localTax;
+
+            // 실수령액
+            const netBonus = bonusAmount - totalDeduction;
+
+            // 결과 표시
+            document.getElementById('resultBonus').textContent = formatNumber(bonusAmount) + '원';
+            document.getElementById('resultPension').textContent = formatNumber(pension) + '원';
+            document.getElementById('resultHealth').textContent = formatNumber(health) + '원';
+            document.getElementById('resultCare').textContent = formatNumber(care) + '원';
+            document.getElementById('resultEmployment').textContent = formatNumber(employment) + '원';
+            document.getElementById('resultIncomeTax').textContent = formatNumber(incomeTax) + '원';
+            document.getElementById('resultLocalTax').textContent = formatNumber(localTax) + '원';
+            document.getElementById('resultTotalDeduction').textContent = formatNumber(totalDeduction) + '원';
+            document.getElementById('resultNet').textContent = formatNumber(netBonus) + '원';
+
+            document.getElementById('result').classList.add('show');
+        }
+    </script>
+</body>
+</html>
