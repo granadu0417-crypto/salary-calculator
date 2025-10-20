@@ -423,5 +423,27 @@
             document.getElementById('result').classList.add('show');
         }
     </script>
+  <!-- 방문자 추적 스크립트 -->
+  <script>
+  (function() {
+    const startTime = Date.now();
+
+    window.addEventListener('beforeunload', function() {
+      const duration = Math.floor((Date.now() - startTime) / 1000);
+
+      const data = {
+        referrer: document.referrer || 'direct',
+        page_url: window.location.href,
+        session_duration: duration
+      };
+
+      navigator.sendBeacon(
+        'https://analytics-tracker.granadu0417.workers.dev/track',
+        JSON.stringify(data)
+      );
+    });
+  })();
+  </script>
+
 </body>
 </html>

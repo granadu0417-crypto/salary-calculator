@@ -585,5 +585,27 @@
             <a href="index.html" style="display: inline-block; background: white; color: #667eea; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; margin-top: 10px;">💰 월급 계산하러 가기</a>
         </div>
     </div>
+  <!-- 방문자 추적 스크립트 -->
+  <script>
+  (function() {
+    const startTime = Date.now();
+
+    window.addEventListener('beforeunload', function() {
+      const duration = Math.floor((Date.now() - startTime) / 1000);
+
+      const data = {
+        referrer: document.referrer || 'direct',
+        page_url: window.location.href,
+        session_duration: duration
+      };
+
+      navigator.sendBeacon(
+        'https://analytics-tracker.granadu0417.workers.dev/track',
+        JSON.stringify(data)
+      );
+    });
+  })();
+  </script>
+
 </body>
 </html>
