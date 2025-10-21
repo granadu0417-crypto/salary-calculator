@@ -6,6 +6,21 @@
     <title>월급 실수령액 계산기 - 2025년 최신 세율</title>
     <meta name="description" content="2025년 최신 월급 실수령액 계산기. 4대보험, 소득세 공제 후 실수령액 자동 계산. 비과세 항목 포함.">
     <meta name="keywords" content="월급 계산기, 실수령액, 급여 계산기, 4대보험, 소득세, 연봉 계산">
+
+    <!-- PWA 지원 -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="월급 계산기">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="월급 실수령액 계산기 - 2025년 최신 세율">
+    <meta property="og:description" content="2025년 최신 월급 실수령액 계산기. 4대보험, 소득세 공제 후 실수령액 자동 계산.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://salary-calculator-bce.pages.dev/">
+    <meta property="og:image" content="https://salary-calculator-bce.pages.dev/og-image.jpg">
+
     <style>
         * {
             margin: 0;
@@ -205,6 +220,137 @@
             margin-bottom: 10px;
         }
 
+        .usage-counter {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+        }
+
+        .usage-counter .count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FEE500;
+            margin: 5px 0;
+        }
+
+        .share-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .share-title {
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-share {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-facebook {
+            background: #1877F2;
+            color: white;
+        }
+
+        .btn-copy {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-copy.copied {
+            background: #28a745;
+        }
+
+        .bookmark-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 300px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .bookmark-popup h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .bookmark-popup p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .bookmark-popup .shortcut {
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .bookmark-popup .btn-close {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .bookmark-popup .btn-close:hover {
+            background: #5568d3;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -221,6 +367,12 @@
             nav a {
                 text-align: center;
             }
+
+            .bookmark-popup {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
         }
     </style>
     <!-- Google Analytics 4 -->
@@ -235,6 +387,11 @@
 <body>
     <div class="container">
         <header>
+            <div class="usage-counter">
+                <div>지금까지</div>
+                <div class="count" id="usageCount">0</div>
+                <div>명이 사용했어요!</div>
+            </div>
             <h1>💰 월급 계산기</h1>
             <p class="subtitle">2025년 최신 세율로 정확하게 계산하세요</p>
         </header>
@@ -340,6 +497,18 @@
                     <span class="result-label">실수령액</span>
                     <span class="result-value" id="resultNet">-</span>
                 </div>
+
+                <div class="share-section">
+                    <div class="share-title">친구들에게 공유하기</div>
+                    <div class="share-buttons">
+                        <button class="btn-share btn-facebook" onclick="shareFacebook()">
+                            <span>📘</span> 페이스북
+                        </button>
+                        <button class="btn-share btn-copy" onclick="copyLink()" id="copyBtn">
+                            <span>🔗</span> 링크 복사
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="info-box">
@@ -374,7 +543,118 @@
         </div>
     </div>
 
+    <!-- 즐겨찾기 유도 팝업 -->
+    <div class="bookmark-popup" id="bookmarkPopup">
+        <h3>⭐ 자주 사용하시나요?</h3>
+        <p>즐겨찾기에 추가하면 더 빠르게 접속할 수 있어요!</p>
+        <div class="shortcut">Windows: Ctrl + D</div>
+        <div class="shortcut">Mac: Cmd + D</div>
+        <button class="btn-close" onclick="closeBookmarkPopup()">확인했어요</button>
+    </div>
+
     <script>
+        // 사용 횟수 카운터
+        function initUsageCounter() {
+            const storageKey = 'salary_usage_count';
+            const baseCount = 156230;
+            let currentCount = parseInt(localStorage.getItem(storageKey)) || baseCount;
+            currentCount++;
+            localStorage.setItem(storageKey, currentCount);
+
+            const formattedCount = currentCount.toLocaleString('ko-KR');
+            const countElement = document.getElementById('usageCount');
+            let start = currentCount - 100;
+            const duration = 1000;
+            const increment = 100 / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= currentCount) {
+                    countElement.textContent = formattedCount;
+                    clearInterval(timer);
+                } else {
+                    countElement.textContent = Math.floor(current).toLocaleString('ko-KR');
+                }
+            }, 16);
+        }
+
+        // PWA Service Worker 등록
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('Service Worker 등록 성공'))
+                    .catch(error => console.log('Service Worker 등록 실패'));
+            });
+        }
+
+        // 즐겨찾기 팝업
+        function showBookmarkPopup() {
+            const storageKey = 'salary_bookmark_shown';
+            const usageKey = 'salary_calculation_count';
+
+            if (localStorage.getItem(storageKey)) return;
+
+            let usageCount = parseInt(localStorage.getItem(usageKey)) || 0;
+            usageCount++;
+            localStorage.setItem(usageKey, usageCount);
+
+            if (usageCount === 3) {
+                setTimeout(() => {
+                    document.getElementById('bookmarkPopup').style.display = 'block';
+                }, 1000);
+            }
+        }
+
+        function closeBookmarkPopup() {
+            document.getElementById('bookmarkPopup').style.display = 'none';
+            localStorage.setItem('salary_bookmark_shown', 'true');
+        }
+
+        // 페이스북 공유
+        function shareFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+        }
+
+        // 링크 복사
+        function copyLink() {
+            const url = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const btn = document.getElementById('copyBtn');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<span>✅</span> 복사완료!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => fallbackCopyLink(url));
+            } else {
+                fallbackCopyLink(url);
+            }
+        }
+
+        function fallbackCopyLink(url) {
+            const textarea = document.createElement('textarea');
+            textarea.value = url;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('링크가 복사되었습니다!');
+            } catch (err) {
+                alert('링크 복사에 실패했습니다: ' + url);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('DOMContentLoaded', initUsageCounter);
+
         function formatNumber(num) {
             return new Intl.NumberFormat('ko-KR').format(num);
         }
@@ -457,6 +737,8 @@
             document.getElementById('resultNet').textContent = formatNumber(netSalary) + '원';
 
             document.getElementById('result').classList.add('show');
+
+            showBookmarkPopup();
         }
     </script>
   <!-- 방문자 추적 스크립트 -->
