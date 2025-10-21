@@ -738,8 +738,45 @@
 
             document.getElementById('result').classList.add('show');
 
+            // URL 파라미터에 결과 저장 (공유용)
+            const resultUrl = new URL(window.location.href);
+            resultUrl.searchParams.set('gross', grossSalary);
+            resultUrl.searchParams.set('net', netSalary);
+            resultUrl.searchParams.set('deduction', totalDeduction);
+            window.history.pushState({}, '', resultUrl);
+
             showBookmarkPopup();
         }
+
+        // 페이지 로드 시 공유된 결과 표시
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedGross = urlParams.get('gross');
+            const sharedNet = urlParams.get('net');
+            const sharedDeduction = urlParams.get('deduction');
+
+            if (sharedGross && sharedNet && sharedDeduction) {
+                // 공유된 결과 표시
+                document.getElementById('resultGross').textContent = formatNumber(parseInt(sharedGross)) + '원';
+                document.getElementById('resultNet').textContent = formatNumber(parseInt(sharedNet)) + '원';
+                document.getElementById('resultTotalDeduction').textContent = formatNumber(parseInt(sharedDeduction)) + '원';
+
+                // 결과 섹션 표시
+                document.getElementById('result').classList.add('show');
+
+                // 결과 상단에 안내 메시지 표시
+                const resultTitle = document.querySelector('#result h3');
+                resultTitle.innerHTML = '<span style="color: #764ba2;">💰 공유된 계산 결과</span>';
+                resultTitle.insertAdjacentHTML('afterend',
+                    '<p style="color: #666; font-size: 14px; margin-bottom: 15px;">나도 내 월급을 계산해보세요 👆</p>'
+                );
+
+                // 스크롤을 결과 영역으로 이동
+                setTimeout(() => {
+                    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        });
     </script>
   <!-- 방문자 추적 스크립트 -->
   <script>
